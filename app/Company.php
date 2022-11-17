@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Product;
 
 class Company extends Model
 {
@@ -16,4 +17,8 @@ class Company extends Model
         'street_address',
         'representative_name',
     ];
+
+    public function products() {
+        return $this->hasMany('App\Product');
+    }
 }
