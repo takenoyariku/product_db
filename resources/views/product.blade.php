@@ -60,6 +60,11 @@
                         @endforeach
                     </table>
 
+                    <div>
+                        {{ $products->links() }}
+                    </div>
+
+
                     @else
                     <p>見つかりませんでした。</p>
                     @endif

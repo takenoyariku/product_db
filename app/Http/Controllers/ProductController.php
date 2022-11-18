@@ -29,29 +29,29 @@ class ProductController extends Controller
     public function showList(Request $request)
     {
         //検索機能
-        $keyword_product = $request->input('keyword_product');
         $company = $request->input('company');
-        $query = Product::query();
+        $keyword_product = $request->input('keyword_product');
+        $query = Company::query();
 
         // 全角スペースを半角に変換
-        $spaceConversion = mb_convert_kana($keyword_product, 's');
+        $spaceConversion = mb_convert_kana($company, 's');
         // 単語を半角スペースで区切り、配列にする
         $wordArraySearched = preg_split('/[\s,]+/', $spaceConversion, -1, PREG_SPLIT_NO_EMPTY);
         //テーブルの結合
-        $query->leftjoin('companies', function ($query) use ($request) {
-            $query->on('products.company_id', '=', 'companies.id');
+        $query->join('products', function ($query) use ($request) {
+            $query->on('companies.id', '=', 'products.company_id');
         })->select('products.id as product_id','companies.id as company_id','price', 'stock', 'product_name', 'img_path', 'company_name');
         // 単語をループで回し、ユーザーネームと部分一致するものがあれば、$queryとして保持される
-        if (!empty($keyword_product)) {
+        if (!empty($company)) {
             foreach($wordArraySearched as $value) {
-                $query->where('product_name', 'like', "%{$keyword_product}%");
+                $query->where('company_name',  $company);
             }
         }
-        if (!empty($company)) {
-                $query->where('company_name', $company);
+        if (!empty($keyword_product)) {
+                $query->where('product_name', 'like', "%{$keyword_product}%");
         }
 
-        $products = $query->get();
+        $products = $query->paginate(5);
 
         $company_list = Company::all();
         
@@ -75,7 +75,7 @@ class ProductController extends Controller
             return redirect(route('product'));
         }
 
-        return view('detail', ['product' => $product], ['company' => $company]);
+        return view('detail', compact('product', 'company'));
     }
 
       /**
@@ -86,7 +86,7 @@ class ProductController extends Controller
     public function showCreate(Request $request) 
     {
         $companies = Company::all();
-        return view('form', ['companies' => $companies]);
+        return view('form', compact('companies'));
     }
 
       /**
@@ -137,7 +137,7 @@ class ProductController extends Controller
            return redirect(route('product'));
        }
 
-       return view('edit', ['product' => $product], ['companies' => $companies]);
+       return view('edit', compact('product', 'companies'));
    }
 
      /**
