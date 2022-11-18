@@ -15,7 +15,7 @@
                     @endif
 
                     <table class="table table-striped">
-                        <tr style="white-space:nowrap;">
+                        <tr>
                             <th>id</th>
                             <th>商品画像</th>
                             <th>商品名</th>
@@ -25,22 +25,21 @@
                             <th>コメント</th>
                         </tr>
                         <tr>
-                            <td>{{ $product->id }}</td>
-                            <td><img src="{{asset(\Storage::url($product->img_path))}}"alt="" class="products-image" height="80" width="80"></td>
-                            <td style="white-space:nowrap;">{{ $product->product_name }}</td>
-                            <td>{{ $product->companies->company_name }}</td>
-                            <td>{{ $product->price }}</td>
-                            <td>{{ $product->stock }}</td>
-                            <td>{{ $product->comment }}</td>
+                            <td>{{ $product -> id }}</td>
+                            <td><img src="{{asset(\Storage::url($product -> img_path))}}"alt="" class="products-image"></td>
+                            <td style="white-space:nowrap;">{{ $product -> product_name }}</td>
+                            <td>{{ $product -> companies->company_name }}</td>
+                            <td>{{ $product -> price }}</td>
+                            <td>{{ $product -> stock }}</td>
+                            <td>{{ $product -> comment }}</td>
                         </tr>
                     </table>
                     <div class="product-edit">
-                            <button class="btn btn-primary" onclick="location.href='/edit/{{ $product->id }}'">編集</button>
+                            <button class="btn btn-primary" onclick="location.href='/edit/{{ $product -> id }}'">編集</button>
                     </div>
                     <div class="back-button">
                             <button class="btn btn-primary" onclick="location.href='{{ route('product') }}'">戻る</button>
                     </div>
-
                 </div>
             </div>
         </div>

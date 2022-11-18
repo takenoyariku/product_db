@@ -15,10 +15,9 @@ class ProductController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->company = new Company();
+    public function __construct() {
+        $this -> middleware('auth');
+        $this -> company = new Company();
     }
 
     /**
@@ -26,11 +25,10 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function showList(Request $request)
-    {
+    public function showList(Request $request) {
         //検索機能
-        $company = $request->input('company');
-        $keyword_product = $request->input('keyword_product');
+        $company = $request -> input('company');
+        $keyword_product = $request -> input('keyword_product');
         $query = Company::query();
 
         // 全角スペースを半角に変換
@@ -39,19 +37,19 @@ class ProductController extends Controller
         $wordArraySearched = preg_split('/[\s,]+/', $spaceConversion, -1, PREG_SPLIT_NO_EMPTY);
         //テーブルの結合
         $query->join('products', function ($query) use ($request) {
-            $query->on('companies.id', '=', 'products.company_id');
-        })->select('products.id as product_id','companies.id as company_id','price', 'stock', 'product_name', 'img_path', 'company_name');
+            $query -> on('companies.id', '=', 'products.company_id');
+        }) -> select('products.id as product_id','companies.id as company_id','price', 'stock', 'product_name', 'img_path', 'company_name');
         // 単語をループで回し、ユーザーネームと部分一致するものがあれば、$queryとして保持される
         if (!empty($company)) {
             foreach($wordArraySearched as $value) {
-                $query->where('company_name',  $company);
+                $query -> where('company_name',  $company);
             }
         }
         if (!empty($keyword_product)) {
                 $query->where('product_name', 'like', "%{$keyword_product}%");
         }
 
-        $products = $query->paginate(5);
+        $products = $query -> paginate(5);
 
         $company_list = Company::all();
         
@@ -62,9 +60,8 @@ class ProductController extends Controller
      * @param int $id
      * @return \Illuminate\Contracts\Support\Renderable 
      */
-    public function showDetail($id)
-    {
-        $product = Product::with('companies')->find($id);
+    public function showDetail($id) {
+        $product = Product::with('companies') -> find($id);
 
         $company = Company::find($id);
 
@@ -83,8 +80,7 @@ class ProductController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
 
-    public function showCreate(Request $request) 
-    {
+    public function showCreate(Request $request) {
         $companies = Company::all();
         return view('form', compact('companies'));
     }
@@ -94,15 +90,14 @@ class ProductController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
 
-    public function exeStore(Request $request) 
-    {
+    public function exeStore(Request $request) {
         // $request->company_id;
         // 商品のデータを受け取る
-        $inputs = $request->all();
+        $inputs = $request -> all();
         // 画像ファイルの保存場所指定
-        if(request('img_path')){
-            $filename=request()->file('img_path')->getClientOriginalName();
-            $inputs['img_path']=request('img_path')->storeAs('public/images', $filename);
+        if(request('img_path')) {
+            $filename = request() -> file('img_path') -> getClientOriginalName();
+            $inputs['img_path'] = request('img_path') -> storeAs('public/images', $filename);
         }
 
         \DB::beginTransaction();
@@ -125,8 +120,7 @@ class ProductController extends Controller
     * @param int $id
     * @return \Illuminate\Contracts\Support\Renderable
     */
-   public function showEdit($id)
-   {
+   public function showEdit($id) {
        $product = Product::find($id);
 
        $companies = Company::all();
@@ -145,21 +139,20 @@ class ProductController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
 
-   public function exeUpdate(Request $request) 
-   {
+   public function exeUpdate(Request $request) {
        // 商品のデータを受け取る
-       $inputs = $request->all();
+       $inputs = $request -> all();
        // 画像ファイルの保存場所指定
-       if(request('img_path')){
-           $filename=request()->file('img_path')->getClientOriginalName();
-           $inputs['img_path']=request('img_path')->storeAs('public/images', $filename);
+       if(request('img_path')) {
+           $filename = request() -> file('img_path') -> getClientOriginalName();
+           $inputs['img_path'] = request('img_path') -> storeAs('public/images', $filename);
        }
 
        \DB::beginTransaction();
        try {
            // 商品を更新
            $product = Product::find($inputs['id']);
-           $product->fill([
+           $product -> fill([
             'product_name' => $inputs['product_name'],
             'company_id' => $inputs['company_id'],
             'price' => $inputs['price'],
@@ -167,7 +160,7 @@ class ProductController extends Controller
             'comment' => $inputs['comment'],
             'img_path' => $inputs['img_path'],
            ]);
-           $product->save();
+           $product -> save();
            \DB::commit();
        } catch(\Throwable $e) {
            \DB::rollback();
@@ -184,8 +177,7 @@ class ProductController extends Controller
     * @param int $id
     * @return view
     */
-    public function exeDelete($id)
-    {
+    public function exeDelete($id) {
         
         if(empty($id)) {
             \Session::flash('err_msg', 'データがありません。');
@@ -201,6 +193,4 @@ class ProductController extends Controller
         \Session::flash('err_msg', '削除しました。');
         return redirect(route('product'));
     }
-
-
 }

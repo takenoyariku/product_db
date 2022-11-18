@@ -518,6 +518,11 @@ mark,
   height: auto;
 }
 
+.products-image {
+  height: 80px;
+  width: 80px;
+}
+
 .figure {
   display: inline-block;
 }
@@ -1834,6 +1839,7 @@ pre code {
 .table-primary > th,
 .table-primary > td {
   background-color: #c6e0f5;
+  white-space: nowrap;
 }
 
 .table-primary th,
@@ -10937,4 +10943,3 @@ a.text-dark:focus {
     border-color: #dee2e6;
   }
 }
-

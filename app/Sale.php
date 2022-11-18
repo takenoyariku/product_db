@@ -14,5 +14,4 @@ class Sale extends Model
     public function products() {
         return $this->belongsTo('App\Product');
         }
-
 }

@@ -11,7 +11,7 @@
                         <select name="company">
                         <option value="">全て</option>
                             @foreach ($company_list as $company_item)
-                                <option value="{{ $company_item->company_name }}" @if($company == '{{ $company_item->company_name }}') selected @endif>{{ $company_item->company_name }}</option>
+                                <option value="{{ $company_item -> company_name }}" @if($company == '{{ $company_item -> company_name }}') selected @endif>{{ $company_item -> company_name }}</option>
                             @endforeach
                         </select>
                         @csrf
@@ -27,7 +27,7 @@
                     </p>
                     @endif
 
-                    @if($products->count())
+                    @if($products -> count())
                     <table class="table table-striped">
                         <tr>
                             <th>id</th>
@@ -41,17 +41,17 @@
                         </tr>
                         @foreach($products as $product)
                         <tr>
-                            <td>{{ $product->product_id }}</td>
-                            <td><img src="{{asset(\Storage::url($product->img_path))}}"alt="" class="products-image" height="80" width="80"></td>
-                            <td>{{ $product->product_name }}</td>
-                            <td>{{ $product->price }}</td>
-                            <td>{{ $product->stock }}</td>
-                            <td>{{ $product->company_name }}</td>
+                            <td>{{ $product -> product_id }}</td>
+                            <td><img src="{{asset(\Storage::url($product -> img_path))}}"alt="" class="products-image"></td>
+                            <td>{{ $product -> product_name }}</td>
+                            <td>{{ $product -> price }}</td>
+                            <td>{{ $product -> stock }}</td>
+                            <td>{{ $product -> company_name }}</td>
                             <td>                        
-                                <button class="btn btn-primary" onclick="location.href='/product/{{ $product->product_id }}'">詳細</button>
+                                <button class="btn btn-primary" onclick="location.href='/product/{{ $product -> product_id }}'">詳細</button>
                             </td>
                             <td>                        
-                                <form action="{{ route('delete', $product->product_id) }}" method="POST" onSubmit="return checkDelete()" enctype="multipart/form-data">
+                                <form action="{{ route('delete', $product -> product_id) }}" method="POST" onSubmit="return checkDelete()" enctype="multipart/form-data">
                                 @csrf
                                 <button type="submit" class="btn btn-primary" onclick=>削除</button>
                                 </form>
@@ -61,7 +61,7 @@
                     </table>
 
                     <div>
-                        {{ $products->links() }}
+                        {{ $products -> links() }}
                     </div>
 
 
@@ -74,14 +74,7 @@
                     </div>
                 </div>
             </div>
-            <script>
-                function checkDelete(){
-                    if(window.confirm('削除してよろしいですか？')){
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
+            <script src="{{ asset('/js/product.js') }}">
             </script>
         </div>
     </div>
