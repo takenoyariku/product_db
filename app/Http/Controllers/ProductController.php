@@ -26,6 +26,26 @@ class ProductController extends Controller
      * @return \Illuminate\Contracts\Support\Renderable
      */
     public function showList(Request $request) {
+
+        $query = Company::query();
+
+        $query->join('products', function ($query) use ($request) {
+            $query -> on('companies.id', '=', 'products.company_id');
+        }) -> select('products.id as product_id','companies.id as company_id','price', 'stock', 'product_name', 'img_path', 'company_name');
+
+        $products = $query -> paginate(5);
+
+        $company_list = Company::all();
+        
+        
+        return view('product', compact('products', 'company_list'));
+    }
+    /**
+     * 商品を検索する
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function exeList(Request $request) {
         //検索機能
         $company = $request -> input('company');
         $keyword_product = $request -> input('keyword_product');
@@ -53,7 +73,8 @@ class ProductController extends Controller
 
         $company_list = Company::all();
         
-        return view('product', compact('products', 'company', 'keyword_product', 'company_list'));
+        
+        return response()->json(compact('products', 'company', 'keyword_product', 'company_list'));
     }
     /**
      * 商品詳細を表示する

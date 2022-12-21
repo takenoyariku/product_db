@@ -19,6 +19,9 @@ Auth::routes();
 // 商品一覧画面を表示
 Route::get('/home', 'ProductController@showList') -> middleware('auth') -> name('product');
 
+// 商品検索機能を表示
+Route::get('/search', 'ProductController@exeList') -> middleware('auth') -> name('search');
+
 //登録画面を表示
 Route::get('/create','ProductController@showCreate') -> middleware('auth') -> name('create');
 

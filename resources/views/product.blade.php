@@ -7,15 +7,15 @@
             <div class="card">
                 <div>
                     <form action="{{ route('product') }}" method="GET" style="text-align:center">
-                        <input type="text" name="keyword_product" value="@if (isset($keyword_product)) {{ $keyword_product }} @endif">
-                        <select name="company">
+                        <input type="text" id="keyword_product" name="keyword_product" value="@if (isset($keyword_product)) {{ $keyword_product }} @endif">
+                        <select id="company" name="company">
                         <option value="">全て</option>
                             @foreach ($company_list as $company_item)
-                                <option value="{{ $company_item -> company_name }}" @if($company == '{{ $company_item -> company_name }}') selected @endif>{{ $company_item -> company_name }}</option>
+                                <option value="{{ $company_item -> company_name }}">{{ $company_item -> company_name }}</option>
                             @endforeach
                         </select>
                         @csrf
-                        <button type="submit" class="btn btn-primary" onclick=>検索</button>
+                        <button type="submit" class="btn btn-primary" id="search" onclick=>検索</button>
                     </form>
                 </div>
                 <div class="card-header">商品一覧</div>
@@ -28,8 +28,8 @@
                     @endif
 
                     @if($products -> count())
-                    <table class="table table-striped">
-                        <tr>
+                    <table class="table table-striped" id="result">
+                        <tr class=dbconect>
                             <th>id</th>
                             <th>商品画像</th>
                             <th>商品名</th>
@@ -40,17 +40,17 @@
                             <th></th>
                         </tr>
                         @foreach($products as $product)
-                        <tr>
-                            <td>{{ $product -> product_id }}</td>
-                            <td><img src="{{asset(\Storage::url($product -> img_path))}}"alt="" class="products-image"></td>
-                            <td>{{ $product -> product_name }}</td>
-                            <td>{{ $product -> price }}</td>
-                            <td>{{ $product -> stock }}</td>
-                            <td>{{ $product -> company_name }}</td>
-                            <td>                        
+                        <tr class=dbconect>
+                            <td class=dbconect>{{ $product -> product_id }}</td>
+                            <td class=dbconect><img src="{{asset(\Storage::url($product -> img_path))}}"alt="" class="products-image"></td>
+                            <td class=dbconect>{{ $product -> product_name }}</td>
+                            <td class=dbconect>{{ $product -> price }}</td>
+                            <td class=dbconect>{{ $product -> stock }}</td>
+                            <td class=dbconect>{{ $product -> company_name }}</td>
+                            <td class=dbconect>                        
                                 <button class="btn btn-primary" onclick="location.href='/product/{{ $product -> product_id }}'">詳細</button>
                             </td>
-                            <td>                        
+                            <td class=dbconect>                        
                                 <form action="{{ route('delete', $product -> product_id) }}" method="POST" onSubmit="return checkDelete()" enctype="multipart/form-data">
                                 @csrf
                                 <button type="submit" class="btn btn-primary" onclick=>削除</button>
@@ -74,8 +74,7 @@
                     </div>
                 </div>
             </div>
-            <script src="{{ asset('/js/product.js') }}">
-            </script>
+         
         </div>
     </div>
 </div>
