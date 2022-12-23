@@ -7,7 +7,7 @@ function checkDelete(){
 }
 
 //検索機能非同期処理.searchbuttonをクリックしたらこの関数に飛ぶ
-$(document).on('click', '#search', function () {
+$(document).on('click', '#searchbutton', function () {
 //   ～～ここで値を取得～～
   var search_data = {
     keyword_product: $("#keyword_product").val(),
@@ -49,7 +49,7 @@ $(document).on('click', '#search', function () {
           $('#'+val.product_id).append(
               '<td class="dbconect">'+val.product_id+'</td>');
           $('#'+val.product_id).append(
-              '<td class="dbconect"><img src="'+productUrl+'image/'+val.img_path+'" height="300" width="300"></td>');
+              '<td class="dbconect"><img src="'+'/image/'+val.img_path+'" height="300" width="300"></td>');
           $('#'+val.product_id).append(
               '<td class="dbconect">'+val.product_name+'</td>');
           $('#'+val.product_id).append(
@@ -58,9 +58,7 @@ $(document).on('click', '#search', function () {
               '<td class="dbconect">'+val.stock+'</td>');
           $('#'+val.product_id).append(
               '<td class="dbconect">'+val.company_name+'</td>');
-          $('#'+val.product_id).append(
-              '<td class="dbconect"><a href="'+productUrl+'productdetails/'+val.product_id+
-              ') }}"><input type="button" value="詳細表示" id="detailbutton"></a><td>');
+          $('#'+val.product_id).append('<td class="dbconect" id="'+val.product_id+'">'+'<button class="btn btn-primary" onclick="location.href='+'/product/'+val.product_id+'">詳細</button>');
           $('#'+val.product_id).append(
               '<td class="dbconect" id="'+val.product_id+'">'
                   +'<input class="deletebutton" type="button" value="削除"></td>');
