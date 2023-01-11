@@ -7,6 +7,7 @@ use App\Product;
 use App\Company;
 use App\Sale;
 use App\Http\Requests\ProductRequest;
+use App\Http\Controllers\API\SaleController;
 
 class ProductController extends Controller
 {
@@ -27,13 +28,13 @@ class ProductController extends Controller
      */
     public function showList(Request $request) {
 
-        $query = Company::query();
+        $query = Product::query();
 
-        $query->join('products', function ($query) use ($request) {
-            $query -> on('companies.id', '=', 'products.company_id');
+        $query->join('companies', function ($query) use ($request) {
+            $query -> on('products.company_id', '=', 'companies.id');
         }) -> select('products.id as product_id','companies.id as company_id','price', 'stock', 'product_name', 'img_path', 'company_name');
 
-        $products = $query -> paginate(5);
+        $products = $query -> sortable() -> paginate(5);
 
         $company_list = Company::all();
         
@@ -49,32 +50,31 @@ class ProductController extends Controller
         //検索機能
         $company = $request -> input('company');
         $keyword_product = $request -> input('keyword_product');
+        $min_price = $request -> input('min_price');
+        $max_price = $request -> input('max_price');
         $query = Company::query();
 
-        // 全角スペースを半角に変換
-        $spaceConversion = mb_convert_kana($company, 's');
-        // 単語を半角スペースで区切り、配列にする
-        $wordArraySearched = preg_split('/[\s,]+/', $spaceConversion, -1, PREG_SPLIT_NO_EMPTY);
         //テーブルの結合
         $query->join('products', function ($query) use ($request) {
             $query -> on('companies.id', '=', 'products.company_id');
         }) -> select('products.id as product_id','companies.id as company_id','price', 'stock', 'product_name', 'img_path', 'company_name');
         // 単語をループで回し、ユーザーネームと部分一致するものがあれば、$queryとして保持される
         if (!empty($company)) {
-            foreach($wordArraySearched as $value) {
                 $query -> where('company_name',  $company);
-            }
         }
         if (!empty($keyword_product)) {
-                $query->where('product_name', 'like', "%{$keyword_product}%");
+                $query -> where('product_name', 'like', "%{$keyword_product}%");
+        }
+        if (!empty($min_price)) {
+            $query -> where('price', '>=', $min_price);
+        }
+        if (!empty($max_price)) {
+            $query -> where('price', '<=', $max_price);
         }
 
         $products = $query -> paginate(5);
-
-        $company_list = Company::all();
         
-        
-        return response()->json(compact('products', 'company', 'keyword_product', 'company_list'));
+        return response()->json(compact('products'));
     }
     /**
      * 商品詳細を表示する
@@ -112,7 +112,7 @@ class ProductController extends Controller
      */
 
     public function exeStore(Request $request) {
-        // $request->company_id;
+        $request->company_id;
         // 商品のデータを受け取る
         $inputs = $request -> all();
         // 画像ファイルの保存場所指定
@@ -166,7 +166,7 @@ class ProductController extends Controller
        // 画像ファイルの保存場所指定
        if(request('img_path')) {
            $filename = request() -> file('img_path') -> getClientOriginalName();
-           $inputs['img_path'] = request('img_path') -> storeAs('public/images', $filename);
+           $inputs['img_path'] = request('img_path') -> storeAs('storage/images/', $filename);
        }
 
        \DB::beginTransaction();
@@ -198,20 +198,9 @@ class ProductController extends Controller
     * @param int $id
     * @return view
     */
-    public function exeDelete($id) {
-        
-        if(empty($id)) {
-            \Session::flash('err_msg', 'データがありません。');
-            return redirect(route('product'));
-        }
-        try {
-            // 商品を削除
-            Product::destroy($id);
-        } catch(\Throwable $e) {
-            abort(500);
-        };
- 
-        \Session::flash('err_msg', '削除しました。');
-        return redirect(route('product'));
+    public function exeDelete(Request $request, Product $product) {
+        $product = Product::findOrFail($request->id);
+        $product->delete();
     }
+
 }

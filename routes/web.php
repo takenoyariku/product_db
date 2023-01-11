@@ -16,26 +16,29 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+
+
 // 商品一覧画面を表示
-Route::get('/home', 'ProductController@showList') -> middleware('auth') -> name('product');
+Route::get('/home', 'ProductController@showList') -> name('product');
 
 // 商品検索機能を表示
-Route::get('/search', 'ProductController@exeList') -> middleware('auth') -> name('search');
+Route::post('/search', 'ProductController@exeList') -> name('search');
 
 //登録画面を表示
-Route::get('/create','ProductController@showCreate') -> middleware('auth') -> name('create');
+Route::get('/create','ProductController@showCreate') -> name('create');
 
 //商品登録
-Route::post('/store','ProductController@exeStore') -> middleware('auth') -> name('store');
+Route::post('/store','ProductController@exeStore') -> name('store');
 
 // 商品詳細画面を表示
-Route::get('/product/{id}','ProductController@showDetail') -> middleware('auth') -> name('detail');
+Route::get('/product/{id}','ProductController@showDetail') -> name('detail');
 
 // 商品編集画面を表示
-Route::get('/edit/{id}','ProductController@showEdit') -> middleware('auth') -> name('edit');
+Route::get('/edit/{id}','ProductController@showEdit') -> name('edit');
 
 //商品編集
-Route::post('/update','ProductController@exeUpdate') -> middleware('auth') -> name('update');
+Route::post('/update','ProductController@exeUpdate') -> name('update');
 
 //商品削除
-Route::post('/delete/{id}','ProductController@exeDelete') -> middleware('auth') -> name('delete');
+Route::post('/delete/{id}','ProductController@exeDelete') -> name('delete');
+

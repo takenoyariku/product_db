@@ -11,6 +11,8 @@ class Sale extends Model
 
     protected $table = 'sales';
 
+    protected $fillable = ['id', 'product_id'];
+
     public function products() {
         return $this->belongsTo('App\Product');
         }

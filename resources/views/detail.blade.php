@@ -37,6 +37,9 @@
                     <div class="product-edit">
                             <button class="btn btn-primary" onclick="location.href='/edit/{{ $product -> id }}'">編集</button>
                     </div>
+                    <div class="product-sale">
+                            <button class="btn btn-primary" onclick="location.href='/sale/{{ $product -> id }}'">出荷</button>
+                    </div>
                     <div class="back-button">
                             <button class="btn btn-primary" onclick="location.href='{{ route('product') }}'">戻る</button>
                     </div>

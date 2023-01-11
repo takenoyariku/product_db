@@ -18,6 +18,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
 
     <!--jQuery-->
     <script src="https://code.jquery.com/jquery-3.6.1.slim.min.js" integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA=" crossorigin="anonymous"></script>
@@ -79,7 +80,7 @@
             @yield('content')
         </main>
     </div>
-        <script src="{{ asset('/js/product.js') }}">
-        </script>
+    <script src="{{ asset('/js/product.js') }}">
+    </script>
 </body>
 </html>
